@@ -1,0 +1,6 @@
+trigger LectureOneTrigger on LectureOne__c (before insert, after insert) {
+    
+    if (Trigger.isInsert && Trigger.isBefore) {
+        DateChanger.changeLectureEndDateToNow(Trigger.New);
+    }
+}
