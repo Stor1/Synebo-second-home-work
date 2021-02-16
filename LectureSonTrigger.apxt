@@ -1,0 +1,11 @@
+trigger LectureSonTrigger on Lecture_son__c (before insert, after insert, after update) {
+	
+    if (Trigger.isInsert && Trigger.isBefore) {
+       DateChanger.changeLectureSonsStartDateToNow(Trigger.New); 
+    }
+    
+    if (Trigger.isAfter && (Trigger.isInsert || Trigger.isUpdate)) {
+        DateChanger.changeRelatedLectureEndDate(Trigger.New);
+    }
+    
+}
