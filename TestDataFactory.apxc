@@ -1,0 +1,71 @@
+@isTest
+public class TestDataFactory {
+    
+    public static List<LectureOne__c> createLectures(Integer numLects, DateTime endDate, Boolean clearEndDate) {
+        
+		List<LectureOne__c> lects = new List<LectureOne__c>();
+        
+        for (Integer i = 0; i < numLects; i++) {
+            LectureOne__c lect = new LectureOne__c(Name = 'TestLecture' + i, End__c = endDate);
+            lects.add(lect);
+        }
+        
+        insert lects;
+        
+        if (lects.size() > 0 && clearEndDate) {
+            for (LectureOne__c lect : lects) {
+                System.debug('lect.End__c ' + lect.End__c);
+                lect.End__c = null;
+            }
+           update lects;
+        }
+        
+        return lects;
+    }
+    
+    public static List<Lecture_son__c> createLecturesSons(Integer numSons, DateTime startDate, Boolean clearStartDate) {
+    	
+        List<Lecture_son__c> lectSons = new List<Lecture_son__c>();
+        
+        for (Integer i = 0; i < numSons; i++) {
+            Lecture_son__c lectSon = new Lecture_son__c(Name = 'TestLectureSon' + i);
+            if (startDate != null) {
+                lectSon.StartDate__c = startDate;
+            }
+            lectSons.add(lectSon);
+        }
+        
+        insert lectSons;
+        
+        if (lectSons.size() > 0 && clearStartDate) {
+            for (Lecture_son__c lectSon : lectSons) {
+                lectSon.StartDate__c = null;
+            }
+            update lectSons;
+        }
+        
+        return lectSons;
+        
+    }
+    
+    public static List<LectureOne__c> createLecturesWithSons(Integer numLects, DateTime endDate, Boolean clearEndDate, Integer numSonsPerLect) {
+        
+        List<LectureOne__c> lects = new List<LectureOne__c>();
+        
+        lects = createLectures(numLects, endDate, clearEndDate);
+        
+        List<Lecture_son__c> lectSons = new List<Lecture_son__c>();
+        for (Integer j = 0; j < numLects; j++) {
+            
+            LectureOne__c lecture = lects[j];
+            
+            for (Integer k = 0; k < numSonsPerLect; k++) {
+                lectSons.add(new Lecture_son__c(Name = lecture.Name + ' Sons ' + k, LectureOneParent__c = lecture.Id));
+            }
+        }
+        insert(lectSons);
+        
+        return lects; 
+    }
+    
+}
