@@ -1,0 +1,34 @@
+public class DateChanger {
+
+    public static void changeLectureEndDateToNow(List<LectureOne__c> arr) {
+       for (LectureOne__c lect : arr) {
+           if (lect.End__c == null) {
+      			lect.End__c = DateTime.now();
+           }
+    	} 
+    }
+    
+    public static void changeLectureSonsStartDateToNow(List<Lecture_son__c> arr) {
+       for (Lecture_son__c lectSon : arr) {
+           if (lectSon.StartDate__c == null) {
+               lectSon.StartDate__c = DateTime.now();
+           }
+    	} 
+    }
+    
+    public static void changeRelatedLectureEndDate(List<Lecture_son__c> arr) {
+        
+       List<Id> lecturesId = new List<Id>(); 
+       
+        for (Lecture_son__c lectSon : arr) {
+        	lecturesId.add(lectSon.LectureOneParent__c);    
+        }
+        
+       List<LectureOne__c> lectures = [SELECT Id, End__c FROM LectureOne__c WHERE Id IN : lecturesId AND End__c = NULL];
+       changeLectureEndDateToNow(lectures);
+        
+        if (lectures.size() > 0) {
+            update lectures; 
+        }    
+    }
+}
