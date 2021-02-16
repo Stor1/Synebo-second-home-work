@@ -1,0 +1,130 @@
+@isTest
+public class TestLectureSonTrigger {
+
+    @isTest
+    static void TestFillingLectureSonsStartDate() {
+        List<Lecture_son__c> lectSons = TestDataFactory.createLecturesSons(1, null, false);
+        List<Lecture_son__c> lectSonsWithStartDate = [SELECT Id, StartDate__c FROM Lecture_son__c WHERE Id IN :lectSons];
+        System.assert(lectSonsWithStartDate.get(0).StartDate__c != null);
+    }
+    
+    @isTest
+    static void TestBulkFillingLectureSonsStartDate() {
+        List<Lecture_son__c> lectSons = TestDataFactory.createLecturesSons(200, null, false);
+        List<Lecture_son__c> lectSonsWithStartDate = [SELECT Id, StartDate__c FROM Lecture_son__c WHERE Id IN :lectSons];
+        for (Lecture_son__c lectSonWithStartDate : lectSonsWithStartDate) {
+        	System.assert(lectSonWithStartDate.StartDate__c != null);    
+        }
+        System.assertEquals(200, lectSonsWithStartDate.size());
+    }
+    
+    @isTest
+    static void TestFillingPreviouslyFilledLectureSonsStartDate() {
+        
+        DateTime prevDate = DateTime.now();
+        
+        List<Lecture_son__c> lectSons = TestDataFactory.createLecturesSons(1, prevDate, false);
+        List<Lecture_son__c> lectSonsWithStartDate = [SELECT Id, StartDate__c FROM Lecture_son__c WHERE Id IN :lectSons];
+        
+        DateTime startDate = lectSonsWithStartDate.get(0).StartDate__c;
+        
+        System.assert(startDate.date() == prevDate.date());
+        System.assert(startDate.hour() == prevDate.hour());
+        System.assert(startDate.minute() == prevDate.minute());
+        System.assert(startDate.second() == prevDate.second());
+    }
+    
+    @isTest
+    static void TestBulkFillingPreviouslyFilledLectureSonsStartDate() {
+        
+        DateTime prevDate = DateTime.now();
+        
+        List<Lecture_son__c> lectSons = TestDataFactory.createLecturesSons(200, prevDate, false);
+        List<Lecture_son__c> lectSonsWithStartDate = [SELECT Id, StartDate__c FROM Lecture_son__c WHERE Id IN :lectSons];
+        
+        for (Lecture_son__c lectSonWithStartDate : lectSonsWithStartDate) {
+            DateTime startDate = lectSonWithStartDate.StartDate__c;
+        	System.assert(startDate.date() == prevDate.date());
+        	System.assert(startDate.hour() == prevDate.hour());
+        	System.assert(startDate.minute() == prevDate.minute());
+        	System.assert(startDate.second() == prevDate.second());    
+        }
+        System.assertEquals(200, lectSonsWithStartDate.size());
+    }
+    
+    @isTest
+    static void TestFillingPreviouslyFilledLectureSonsStartDateAfterUpdate() {
+        
+        DateTime prevDate = DateTime.now();
+        
+        List<Lecture_son__c> lectSons = TestDataFactory.createLecturesSons(1, prevDate, false);
+        
+        Test.startTest();
+        update lectSons;
+        Test.stopTest();
+        
+        List<Lecture_son__c> lectSonsWithStartDate = [SELECT Id, StartDate__c FROM Lecture_son__c WHERE Id IN :lectSons];
+        
+        DateTime startDate = lectSonsWithStartDate.get(0).StartDate__c;
+        
+        System.assert(startDate.date() == prevDate.date());
+        System.assert(startDate.hour() == prevDate.hour());
+        System.assert(startDate.minute() == prevDate.minute());
+        System.assert(startDate.second() == prevDate.second());
+    }
+    
+    @isTest
+    static void TestBulkFillingPreviouslyFilledLectureSonsStartDateAfterUpdate() {
+        
+        DateTime prevDate = DateTime.now();
+        
+        List<Lecture_son__c> lectSons = TestDataFactory.createLecturesSons(200, prevDate, false);
+        
+        Test.startTest();
+        update lectSons;
+        Test.stopTest();
+        
+        List<Lecture_son__c> lectSonsWithStartDate = [SELECT Id, StartDate__c FROM Lecture_son__c WHERE Id IN :lectSons];
+        
+        for (Lecture_son__c lectSonWithStartDate : lectSonsWithStartDate) {
+            DateTime startDate = lectSonWithStartDate.StartDate__c;
+        	System.assert(startDate.date() == prevDate.date());
+        	System.assert(startDate.hour() == prevDate.hour());
+        	System.assert(startDate.minute() == prevDate.minute());
+        	System.assert(startDate.second() == prevDate.second());    
+        }
+        System.assertEquals(200, lectSonsWithStartDate.size());
+    }
+    
+    @isTest
+    static void TestFillingPreviouslyCleanedLectureSonsStartDateAfterUpdate() {
+        
+        List<Lecture_son__c> lectSons = TestDataFactory.createLecturesSons(1, null, true);
+        
+        Test.startTest();
+        update lectSons;
+        Test.stopTest();
+        
+        List<Lecture_son__c> lectSonsWithStartDate = [SELECT Id, StartDate__c FROM Lecture_son__c WHERE Id IN :lectSons];
+        
+        System.assert(lectSonsWithStartDate.get(0).StartDate__c == null);
+    }
+    
+    @isTest
+    static void TestBulkFillingPreviouslyCleanedLectureSonsStartDateAfterUpdate() {
+        
+        List<Lecture_son__c> lectSons = TestDataFactory.createLecturesSons(200, null, true);
+        
+        Test.startTest();
+        update lectSons;
+        Test.stopTest();
+        
+        List<Lecture_son__c> lectSonsWithStartDate = [SELECT Id, StartDate__c FROM Lecture_son__c WHERE Id IN :lectSons];
+        
+        for (Lecture_son__c lectSonWithStartDate : lectSonsWithStartDate) {
+        	System.assert(lectSonWithStartDate.StartDate__c == null);    
+        }
+        System.assertEquals(200, lectSonsWithStartDate.size());
+    }
+    
+}
