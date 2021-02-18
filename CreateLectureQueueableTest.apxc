@@ -1,0 +1,30 @@
+@isTest
+public class CreateLectureQueueableTest {
+	
+    @isTest
+    static void testCreateLectureQueueable() {
+        
+        String lectName = 'Creater test';
+        CreateLectureQueueable creater = new CreateLectureQueueable(lectName, null);
+        Test.startTest();
+        System.enqueueJob(creater);
+        Test.stopTest();
+        
+        List<LectureOne__c> lects = [SELECT Id FROM LectureOne__c WHERE Name =: lectName];
+        System.assertEquals(1, lects.size());
+    }
+    
+    @isTest
+    static void testCreateLectureQueueableWithBlankName() {
+        
+        String lectName = '';
+        CreateLectureQueueable creater = new CreateLectureQueueable(lectName, null);
+        Test.startTest();
+        System.enqueueJob(creater);
+        Test.stopTest();
+        
+        List<LectureOne__c> lects = [SELECT Id FROM LectureOne__c WHERE Name =: lectName];
+        System.assertEquals(0, lects.size());
+    }
+    
+}

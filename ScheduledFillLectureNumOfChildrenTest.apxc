@@ -1,0 +1,96 @@
+@isTest
+public class ScheduledFillLectureNumOfChildrenTest {
+	
+    public static String CRON_EXP = '0 0 0 15 3 ? 2022';
+    
+    @isTest
+    static void testFillLectureNumOfChildrenWithNoChildren() {
+        
+        List<LectureOne__c> lects = TestDataFactory.createLectures(1, null, false);
+        
+        Test.startTest();
+        String jobId = System.schedule('ScheduledApexTest',
+            CRON_EXP,
+            new ScheduledFillLectureNumOfChildren());
+        Test.stopTest();
+        
+        lects = [SELECT Id, NumberOfChildren__c FROM LectureOne__c];
+        System.debug('lects after '+ lects);
+        
+        System.assertEquals(0, lects.get(0).NumberOfChildren__c);
+        
+    }
+    
+    @isTest
+    static void testFillLectureNumOfChildrenWithOneSon() {
+        
+        List<LectureOne__c> lects = TestDataFactory.createLecturesWithSons(1, null, false, 1);
+        
+        Test.startTest();
+        String jobId = System.schedule('ScheduledApexTest',
+            CRON_EXP,
+            new ScheduledFillLectureNumOfChildren());
+        Test.stopTest();
+        
+        lects = [SELECT Id, NumberOfChildren__c FROM LectureOne__c];
+        
+        System.assertEquals(1, lects.get(0).NumberOfChildren__c);
+        
+    }
+    
+    @isTest
+    static void testBulkFillLectureNumOfChildrenWithOneSon() {
+        
+        List<LectureOne__c> lects = TestDataFactory.createLecturesWithSons(200, null, false, 1);
+        
+        Test.startTest();
+        String jobId = System.schedule('ScheduledApexTest',
+            CRON_EXP,
+            new ScheduledFillLectureNumOfChildren());
+        Test.stopTest();
+        
+        lects = [SELECT Id, NumberOfChildren__c FROM LectureOne__c];
+        
+        for (LectureOne__c lect : lects) {
+        	System.assertEquals(1, lect.NumberOfChildren__c);    
+        }
+        
+    }
+    
+    @isTest
+    static void testFillLectureNumOfChildrenWithTenSons() {
+        
+        List<LectureOne__c> lects = TestDataFactory.createLecturesWithSons(1, null, false, 10);
+        
+        Test.startTest();
+        String jobId = System.schedule('ScheduledApexTest',
+            CRON_EXP,
+            new ScheduledFillLectureNumOfChildren());
+        Test.stopTest();
+        
+        lects = [SELECT Id, NumberOfChildren__c FROM LectureOne__c];
+        
+        System.assertEquals(10, lects.get(0).NumberOfChildren__c);
+        
+    }
+    
+    @isTest
+    static void testBulkFillLectureNumOfChildrenWithTenSons() {
+        
+        List<LectureOne__c> lects = TestDataFactory.createLecturesWithSons(200, null, false, 10);
+        
+        Test.startTest();
+        String jobId = System.schedule('ScheduledApexTest',
+            CRON_EXP,
+            new ScheduledFillLectureNumOfChildren());
+        Test.stopTest();
+        
+        lects = [SELECT Id, NumberOfChildren__c FROM LectureOne__c];
+        
+        for (LectureOne__c lect : lects) {
+        	System.assertEquals(10, lect.NumberOfChildren__c);    
+        }
+        
+    }
+    
+}

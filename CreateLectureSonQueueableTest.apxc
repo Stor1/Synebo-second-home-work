@@ -1,0 +1,60 @@
+@isTest
+public class CreateLectureSonQueueableTest {
+	
+    @isTest
+    static void testCreateLectureSonQueueable() {
+        
+        String lectSonName = 'Son creater test';
+        List<LectureOne__c> lects = TestDataFactory.createLectures(1, null, false);
+        Id lectId = lects.get(0).Id;
+        CreateLectureSonQueueable creater = new CreateLectureSonQueueable(lectSonName, lectId);
+        Test.startTest();
+        System.enqueueJob(creater);
+        Test.stopTest();
+        
+        List<Lecture_son__c> lectSons = [SELECT Id FROM Lecture_son__c WHERE LectureOneParent__c =: lectId AND Name =: lectSonName];
+        System.assertEquals(1, lectSons.size());
+    }
+    
+    @isTest
+    static void testCreateLectureSonQueueableWithBlankName() {
+        
+        String lectSonName = '';
+        List<LectureOne__c> lects = TestDataFactory.createLectures(1, null, false);
+        Id lectId = lects.get(0).Id;
+        CreateLectureSonQueueable creater = new CreateLectureSonQueueable(lectSonName, lectId);
+        Test.startTest();
+        System.enqueueJob(creater);
+        Test.stopTest();
+        
+        List<Lecture_son__c> lectSons = [SELECT Id FROM Lecture_son__c WHERE LectureOneParent__c =: lectId AND Name =: lectSonName];
+        System.assertEquals(0, lectSons.size());
+    }
+    
+    @isTest
+    static void testCreateLectureSonQueueableWitnNoParent() {
+        
+        String lectSonName = 'Son creater test';
+        CreateLectureSonQueueable creater = new CreateLectureSonQueueable(lectSonName, null);
+        Test.startTest();
+        System.enqueueJob(creater);
+        Test.stopTest();
+        
+        List<Lecture_son__c> lectSons = [SELECT Id FROM Lecture_son__c WHERE Name =: lectSonName];
+        System.assertEquals(1, lectSons.size());
+    }
+    
+    @isTest
+    static void testCreateLectureSonQueueableWithBlankNameAndWitnNoParent() {
+        
+        String lectSonName = '';
+        CreateLectureSonQueueable creater = new CreateLectureSonQueueable(lectSonName, null);
+        Test.startTest();
+        System.enqueueJob(creater);
+        Test.stopTest();
+        
+        List<Lecture_son__c> lectSons = [SELECT Id FROM Lecture_son__c WHERE Name =: lectSonName];
+        System.assertEquals(0, lectSons.size());
+    }
+    
+}

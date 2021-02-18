@@ -1,0 +1,14 @@
+public class CreateLectureSonQueueable implements Queueable {
+	private Id parentId;
+    private String name;
+    
+    public CreateLectureSonQueueable(String name, Id parentId) {
+    	this.name = name;
+        this.parentId = parentId;
+    }
+    
+    public void execute(QueueableContext context) {
+        Lecture_son__c ls = new Lecture_son__c(Name = name, LectureOneParent__c = parentId);
+        Database.insert(ls);
+    }
+}

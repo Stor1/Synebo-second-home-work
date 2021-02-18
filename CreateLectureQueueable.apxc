@@ -1,0 +1,24 @@
+public class CreateLectureQueueable implements Queueable {
+	private String name;
+    private Id lectId;
+    
+    public CreateLectureQueueable(String name, Id lectId) {
+        this.name = name;
+        this.lectId = lectId;
+    }
+    
+    public void execute(QueueableContext context) {
+        
+        if (lectId == null) {
+        	LectureOne__c lect = new LectureOne__c(Name = name);
+        	Database.insert(lect);
+        	if(!Test.isRunningTest()) {
+            	System.enqueueJob(new CreateLectureQueueable(name, lect.Id));
+            }
+        }else {
+            Lecture_son__c ls = new Lecture_son__c(Name = name + ' son', LectureOneParent__c = lectId);
+        	Database.insert(ls);
+        }
+        
+    }
+}

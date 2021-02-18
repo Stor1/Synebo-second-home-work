@@ -1,0 +1,88 @@
+@isTest
+public class FillLectureNumOfChildrenTest {
+	
+    @isTest
+    static void testFillLectureNumOfChildrenWithNoChildren() {
+        
+        List<LectureOne__c> lects = TestDataFactory.createLectures(1, null, false);
+        
+        Test.startTest();
+        FillLectureNumOfChildren fl = new FillLectureNumOfChildren();
+        Id batchId = Database.executeBatch(fl);
+        Test.stopTest();
+        
+        lects = [SELECT Id, NumberOfChildren__c FROM LectureOne__c];
+        
+        System.assertEquals(0, lects.get(0).NumberOfChildren__c);
+        
+    }
+    
+    @isTest
+    static void testFillLectureNumOfChildrenWithOneSon() {
+        
+        List<LectureOne__c> lects = TestDataFactory.createLecturesWithSons(1, null, false, 1);
+        
+        Test.startTest();
+        FillLectureNumOfChildren fl = new FillLectureNumOfChildren();
+        Id batchId = Database.executeBatch(fl);
+        Test.stopTest();
+        
+        lects = [SELECT Id, NumberOfChildren__c FROM LectureOne__c];
+        
+        System.assertEquals(1, lects.get(0).NumberOfChildren__c);
+        
+    }
+    
+    @isTest
+    static void testBulkFillLectureNumOfChildrenWithOneSon() {
+        
+        List<LectureOne__c> lects = TestDataFactory.createLecturesWithSons(200, null, false, 1);
+        
+        Test.startTest();
+        FillLectureNumOfChildren fl = new FillLectureNumOfChildren();
+        Id batchId = Database.executeBatch(fl);
+        Test.stopTest();
+        
+        lects = [SELECT Id, NumberOfChildren__c FROM LectureOne__c];
+        
+        for (LectureOne__c lect : lects) {
+        	System.assertEquals(1, lect.NumberOfChildren__c);    
+        }
+        
+    }
+    
+    @isTest
+    static void testFillLectureNumOfChildrenWithTenSons() {
+        
+        List<LectureOne__c> lects = TestDataFactory.createLecturesWithSons(1, null, false, 10);
+        
+        Test.startTest();
+        FillLectureNumOfChildren fl = new FillLectureNumOfChildren();
+        Id batchId = Database.executeBatch(fl);
+        Test.stopTest();
+        
+        lects = [SELECT Id, NumberOfChildren__c FROM LectureOne__c];
+        
+        System.assertEquals(10, lects.get(0).NumberOfChildren__c);
+        
+    }
+    
+    @isTest
+    static void testBulkFillLectureNumOfChildrenWithTenSons() {
+        
+        List<LectureOne__c> lects = TestDataFactory.createLecturesWithSons(200, null, false, 10);
+        
+        Test.startTest();
+        FillLectureNumOfChildren fl = new FillLectureNumOfChildren();
+        Id batchId = Database.executeBatch(fl);
+        Test.stopTest();
+        
+        lects = [SELECT Id, NumberOfChildren__c FROM LectureOne__c];
+        
+        for (LectureOne__c lect : lects) {
+        	System.assertEquals(10, lect.NumberOfChildren__c);    
+        }
+        
+    }
+    
+}

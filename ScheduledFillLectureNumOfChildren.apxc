@@ -1,0 +1,6 @@
+public class ScheduledFillLectureNumOfChildren implements Schedulable {
+	public void execute(SchedulableContext sc) {
+      FillLectureNumOfChildren fl = new FillLectureNumOfChildren(); 
+      Database.executebatch(fl);
+   }
+}

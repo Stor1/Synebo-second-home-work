@@ -1,0 +1,22 @@
+public class FillLectureNumOfChildren implements Database.Batchable<sObject> {
+	
+    public Database.QueryLocator start(Database.BatchableContext bc) {
+        return Database.getQueryLocator(
+            'SELECT Id, NumberOfChildren__c FROM LectureOne__c');
+    }
+    
+    public void execute(Database.BatchableContext bc, List<LectureOne__c> scope){
+        // process each batch of records
+        List<LectureOne__c> lects = new List<LectureOne__c>();
+        for (LectureOne__c lect : scope) {
+            List<Lecture_son__c> lectSons = [SELECT Id FROM Lecture_son__c WHERE LectureOneParent__c = :lect.Id];
+            lect.NumberOfChildren__c = lectSons.size();
+            lects.add(lect);
+        }
+        update lects;
+    }
+    public void finish(Database.BatchableContext bc){
+        
+    }
+    
+}
