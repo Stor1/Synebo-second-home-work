@@ -1,0 +1,52 @@
+public class Animal {
+	public String[] animals;
+    public String eats;
+    public String says;
+    public String id;
+    public String name;
+    
+    public Boolean equals(Object obj) {
+        if (obj instanceof Animal) {
+            Animal p = (Animal)obj;
+            return ((animals==p.animals)&&(eats==p.eats)&&(says==p.says)&&(id==p.id)&&(name==p.name));
+        }
+        return false;
+    }
+    
+    @future(callout=true)
+    public static void updateAnimalsFieldsFromWebService(Set<Id> animalsIds) {
+    	
+        List<Animal__c> animals = [SELECT Name, Eats__c, Says__c, ExternalID__c FROM Animal__c WHERE Id IN :animalsIds AND ExternalID__c != null];
+        List<Animal__c> animalsForUpdate = new List<Animal__c>();
+        
+        Animal animalWeb;
+        Boolean changesWereMade;
+        
+        for (Animal__c animal : animals) {
+            
+            changesWereMade = false;
+        	animalWeb = AnimalLocator.getAnimalById((Integer) animal.ExternalID__c);
+            
+            if (animal.Eats__c == null && animalWeb.eats != null) {
+                animal.Eats__c = animalWeb.eats;
+                changesWereMade = true;
+            }
+            
+            if (animal.Says__c == null && animalWeb.says != null) {
+                animal.Says__c = animalWeb.says;
+                changesWereMade = true;
+            }
+            
+            if (changesWereMade) {
+               animalsForUpdate.add(animal); 
+            }
+            
+        }
+        
+        if (animalsForUpdate.size() > 0) {
+            Database.update(animalsForUpdate);
+        }
+        
+    }
+    
+}

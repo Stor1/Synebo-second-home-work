@@ -1,0 +1,5 @@
+trigger AnimalTrigger on Animal__c (after insert) {
+    if (Trigger.isAfter) {
+        Animal.updateAnimalsFieldsFromWebService(Trigger.NewMap.keySet());
+    }
+}
