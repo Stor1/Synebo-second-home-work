@@ -1,0 +1,17 @@
+@isTest
+public class AnimalTest {
+	
+    @isTest
+    static void testGetAnimalById() {
+    	
+        Test.setMock(HttpCalloutMock.class, new AnimalLocatorMock());
+        Animal.AnimalInfo response = Animal.getAnimalInfoById(1);
+        Animal.AnimalInfo expectedValue = TestDataFactory.createAnimalInfo('1',
+            															'chicken',
+                                                                        'cluck cluck',
+                                                                        'chicken food');
+        System.assertEquals(response, expectedValue);
+        
+    }
+    
+}
