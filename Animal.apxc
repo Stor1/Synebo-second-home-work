@@ -1,14 +1,37 @@
 public class Animal {
+    
+    public AnimalInfo animal;
 	public String[] animals;
-    public String eats;
-    public String says;
-    public String id;
-    public String name;
+    
+    public class AnimalInfo {
+        
+        public String eats;
+    	public String says;
+    	public String id;
+    	public String name;
+        
+        public AnimalInfo(String id, String name, String says, String eats) {
+            this.id = id;
+            this.name = name;
+            this.says = says;
+            this.eats = eats;
+        }
+        
+        public Boolean equals(Object obj) {
+        if (obj instanceof AnimalInfo) {
+            AnimalInfo an = (AnimalInfo)obj;
+            return ((eats==an.eats)&&(says==an.says)&&(id==an.id)&&(name==an.name));
+        }
+        return false;
+    }
+        
+    }
     
     public Boolean equals(Object obj) {
         if (obj instanceof Animal) {
             Animal p = (Animal)obj;
-            return ((animals==p.animals)&&(eats==p.eats)&&(says==p.says)&&(id==p.id)&&(name==p.name));
+            AnimalInfo animalInfo = p.animal;
+            return ((animals==p.animals)&&(animal.eats==animalInfo.eats)&&(animal.says==animalInfo.says)&&(animal.id==animalInfo.id)&&(animal.name==animalInfo.name));
         }
         return false;
     }
@@ -19,26 +42,16 @@ public class Animal {
         List<Animal__c> animals = [SELECT Name, Eats__c, Says__c, ExternalID__c FROM Animal__c WHERE Id IN :animalsIds AND ExternalID__c != null];
         List<Animal__c> animalsForUpdate = new List<Animal__c>();
         
-        Animal animalWeb;
+        AnimalInfo animalInfo;
         Boolean changesWereMade;
         
-        for (Animal__c animal : animals) {
+        for (Animal__c animalObj : animals) {
             
-            changesWereMade = false;
-        	animalWeb = AnimalLocator.getAnimalById((Integer) animal.ExternalID__c);
-            
-            if (animal.Eats__c == null && animalWeb.eats != null) {
-                animal.Eats__c = animalWeb.eats;
-                changesWereMade = true;
-            }
-            
-            if (animal.Says__c == null && animalWeb.says != null) {
-                animal.Says__c = animalWeb.says;
-                changesWereMade = true;
-            }
+        	animalInfo = getAnimalInfoById((Integer) animalObj.ExternalID__c);
+            changesWereMade = fillAnimalObjectFieldsFromAnimalInfo(animalObj, animalInfo);
             
             if (changesWereMade) {
-               animalsForUpdate.add(animal); 
+               animalsForUpdate.add(animalObj); 
             }
             
         }
@@ -46,6 +59,48 @@ public class Animal {
         if (animalsForUpdate.size() > 0) {
             Database.update(animalsForUpdate);
         }
+        
+    }
+    
+     public static AnimalInfo getAnimalInfoById(Integer animalId) {
+        
+        Http http = new Http();
+        
+        HttpRequest request = new HttpRequest();
+        request.setEndpoint('https://th-apex-http-callout.herokuapp.com/animals/' + animalId);
+        request.setMethod('GET');
+        
+        HttpResponse response = http.send(request);
+        
+        AnimalInfo animalInfo;
+        if (response.getStatusCode() == 200) {
+            Animal webAnimal = (Animal) JSON.deserialize(response.getBody(), Animal.class);
+            animalInfo = webAnimal.animal;
+        }
+        System.debug(animalInfo);
+        return animalInfo;
+        
+    }
+    
+    public static Boolean fillAnimalObjectFieldsFromAnimalInfo(Animal__c animalObj, AnimalInfo animalInfo) {
+        
+        Boolean changesWereMade = false;
+        
+        if (animalInfo == null) {
+            return changesWereMade;
+        }
+        
+    	if (animalObj.Eats__c == null && animalInfo.eats != null) {
+            animalObj.Eats__c = animalInfo.eats;
+            changesWereMade = true;
+        }
+            
+        if (animalObj.Says__c == null && animalInfo.says != null) {
+            animalObj.Says__c = animalInfo.says;
+            changesWereMade = true;
+        }
+        
+        return changesWereMade;
         
     }
     
