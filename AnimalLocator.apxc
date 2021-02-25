@@ -19,24 +19,4 @@ public class AnimalLocator {
         return animalName;
     }
     
-    public static Animal getAnimalById(Integer animalId) {
-        
-        Http http = new Http();
-        
-        HttpRequest request = new HttpRequest();
-        request.setEndpoint('https://th-apex-http-callout.herokuapp.com/animals/' + animalId);
-        request.setMethod('GET');
-        
-        HttpResponse response = http.send(request);
-        
-        Animal animal = new Animal();
-        
-        if (response.getStatusCode() == 200) {
-            Map<String, Object> results = (Map<String, Object>) JSON.deserializeUntyped(response.getBody());
-            animal = (Animal) JSON.deserializeStrict(JSON.serialize(results.get('animal')), Animal.class);
-        }
-        return animal;
-        
-    }
-    
 }
