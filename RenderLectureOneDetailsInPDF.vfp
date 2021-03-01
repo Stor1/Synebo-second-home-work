@@ -1,4 +1,4 @@
-<apex:page standardController="LectureOne__c" renderAs="pdf" applyBodyTag="false">
+<apex:page controller="RenderLectureOneDetailsInPDFController" renderAs="pdf" applyBodyTag="false">
     
     <head>
         <style> 
@@ -7,23 +7,23 @@
     </head>
     <body>
         <center>
-        <h1>"{!LectureOne__c.Name}" lecture details</h1>
+        <h1>"{!LectureOne.Name}" lecture details</h1>
      
-        <apex:panelGrid  columns="2" width="100%">
+        <apex:panelGrid columns="2" width="100%">
             <apex:outputText value="Name:"/>
-            <apex:outputText value="{!LectureOne__c.Name}"/>
+            <apex:outputText value="{!LectureOne.Name}"/>
             <apex:outputText value="Is done:"></apex:outputText>
-            <apex:outputText value="{!LectureOne__c.Is_done__c}"></apex:outputText>
+            <apex:outputText value="{!LectureOne.Is_done__c}"></apex:outputText>
             <apex:outputText value="End time:"></apex:outputText>
-            <apex:outputText value="{!LectureOne__c.End__c}"></apex:outputText>
+            <apex:outputText value="{!LectureOne.End__c}"></apex:outputText>
             <apex:outputText value="How long(minutes):"></apex:outputText>
-            <apex:outputText value="{!LectureOne__c.Long__c}"></apex:outputText>
+            <apex:outputText value="{!LectureOne.Long__c}"></apex:outputText>
             <apex:outputText value="How it be:"></apex:outputText>
-            <apex:outputText value="{!LectureOne__c.How_it_be__c}"></apex:outputText>
+            <apex:outputText value="{!LectureOne.How_it_be__c}"></apex:outputText>
             <apex:outputText value="Number of children:"></apex:outputText>
-            <apex:outputText value="{!LectureOne__c.NumberOfChildren__c}"></apex:outputText>
+            <apex:outputText value="{!LectureOne.NumberOfChildren__c}"></apex:outputText>
             <apex:outputText value="Comment:"></apex:outputText>
-            <apex:outputText value="{!LectureOne__c.Comment__c}"></apex:outputText>
+            <apex:outputText value="{!LectureOne.Comment__c}"></apex:outputText>
         </apex:panelGrid>
         </center>
     </body>

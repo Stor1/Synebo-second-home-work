@@ -1,0 +1,16 @@
+public class RenderLectureOneDetailsInPDFController {
+	
+    public LectureOne__c getLectureOne() {
+        
+        if (ApexPages.currentPage().getParameters().get('id') == null) {
+            return new LectureOne__c();
+        }
+        return [SELECT Id, Name, 
+                Is_done__c, End__c, 
+                Long__c, How_it_be__c,
+                NumberOfChildren__c, Comment__c
+                FROM LectureOne__c
+                WHERE Id = :ApexPages.currentPage().getParameters().get('id')];
+    }
+    
+}
