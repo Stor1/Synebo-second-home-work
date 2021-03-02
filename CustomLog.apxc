@@ -1,0 +1,61 @@
+public class CustomLog {
+	
+    private static Map<Integer, String> statusCodeDescriptionMap = new Map<Integer, String>{
+        																	200 => 'OK',
+                                                                            201 => 'CREATED',
+                                                                            202 => 'ACCEPTED',
+                                                                            204 => 'NO_CONTENT',
+                                                                            206 => 'PARTIAL_CONTENT',
+                                                                            300 => 'MULTIPLE_CHOICES',
+                                                                            301 => 'MOVED_PERMANENTLY',
+                                                                            302 => 'FOUND',
+                                                                            304 => 'NOT_MODIFIED',
+                                                                            400 => 'BAD_REQUEST',
+                                                                            401 => 'UNAUTHORIZED',
+                                                                            403 => 'FORBIDDEN',
+                                                                            404 => 'NOT_FOUND',
+                                                                            405 => 'METHOD_NOT_ALLOWED',
+                                                                            406 => 'NOT_ACCEPTABLE',
+                                                                            409 => 'CONFLICT',
+                                                                            410 => 'GONE',
+                                                                            412 => 'PRECONDITION_FAILED',
+                                                                            413 => 'REQUEST_ENTITY_TOO_LARGE',
+                                                                            414 => 'REQUEST_URI_TOO_LARGE',
+                                                                            415 => 'UNSUPPORTED_MEDIA_TYPE',
+                                                                            417 => 'EXPECTATION_FAILED',
+                                                                            500 => 'INTERNAL_SERVER_ERROR',
+                                                                            503 => 'SERVER_UNAVAILABLE'};
+    
+    public static CustomLog__c createCustomLog(RestResponse res, String requestURI) {
+    	
+        DateTime currentDT = DateTime.now();
+    	CustomLog__c cl = new CustomLog__c(Name = requestURI + ' || ' + currentDT,
+                                           Time__c = currentDT);
+        
+        cl.Status_Code__c = res.statusCode;
+        cl.Status_Description__c = statusCodeDescriptionMap.get(res.statusCode);
+        fillCustomLogHeaders(cl, res.headers);
+        
+        if(res.responseBody != null) {
+            cl.Response_Body__c = res.responseBody.toString();
+        }
+        
+        insert cl;
+        
+        return cl;
+        
+    }
+    
+    private static void fillCustomLogHeaders(CustomLog__c cl, Map<String, String> headers) {
+        
+        String template = '{0} : {1} /n';
+        String headersString = '';
+        List<Object> parameters;
+        for(String key : headers.keySet()) {
+        	parameters = new List<Object> {key, headers.get(key)};
+            headersString = headersString + String.format(template, parameters);
+        }
+		cl.Headers__c = headersString;
+    }
+    
+}

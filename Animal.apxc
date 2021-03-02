@@ -77,7 +77,6 @@ public class Animal {
             Animal webAnimal = (Animal) JSON.deserialize(response.getBody(), Animal.class);
             animalInfo = webAnimal.animal;
         }
-        System.debug(animalInfo);
         return animalInfo;
         
     }
@@ -90,17 +89,35 @@ public class Animal {
             return changesWereMade;
         }
         
-    	if (animalObj.Eats__c == null && animalInfo.eats != null) {
+    	if (animalObj.Eats__c == null && animalInfo.eats != null && String.isNotBlank(animalInfo.eats) && String.isNotEmpty(animalInfo.eats)) {
             animalObj.Eats__c = animalInfo.eats;
             changesWereMade = true;
         }
             
-        if (animalObj.Says__c == null && animalInfo.says != null) {
+        if (animalObj.Says__c == null && animalInfo.says != null && String.isNotBlank(animalInfo.says) && String.isNotEmpty(animalInfo.says)) {
             animalObj.Says__c = animalInfo.says;
             changesWereMade = true;
         }
         
         return changesWereMade;
+        
+    }
+    
+    public static void createAnimalObjectByExternalId(Integer animalExtId) {
+    	
+    	AnimalInfo animalInfo = getAnimalInfoById(animalExtId);
+        if (animalInfo != null || animalInfo.id != '0') {
+            
+            String nameForNewAnimal = 'new Animal';
+            
+            if (animalInfo.name != null || String.isBlank(animalInfo.name) || String.isEmpty(animalInfo.name)) {
+                nameForNewAnimal = animalInfo.name;
+            }
+            Animal__c newAnimal = new Animal__c(Name = nameForNewAnimal, ExternalID__c = animalExtId);
+            if (fillAnimalObjectFieldsFromAnimalInfo(newAnimal, animalInfo)) {
+                insert newAnimal;
+            }
+        }
         
     }
     
