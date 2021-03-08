@@ -1,0 +1,32 @@
+<aura:component controller ="CreateAnimalController" implements="flexipage:availableForAllPageTypes" access="global">
+    
+    <aura:attribute name="createAnimal" type="Animal__c"  default="{'sObjectType' : 'Animal__c','Name' : 'new Animal', 'Eats__c' : 'grass'}"/>
+    
+    <div class="slds-box small slds-theme_default">
+        <center>
+            <h1 class="inlineTitle slds-p-top--large slds-p-horizontal--medium slds-p-bottom--medium slds-text-heading--medium" 
+                style="font-size:20px">
+                Custom Create Animal
+                <hr size="3" noshade=""></hr>
+            </h1>
+      	</center>
+    
+        <h2 class="slds-section__title slds-theme--shade primaryPaletteBorder test-id__section-header-container"> 
+            New Animal Information
+        </h2>
+        <div class="slds-p-around_small">
+            <lightning:input type="Text" label="Name" required="true" value="{!v.createAnimal.Name}"/>
+            <lightning:input type="Text" label="Eats" value="{!v.createAnimal.Eats__c}"/>
+            <lightning:input type="Text" label="Says" value="{!v.createAnimal.Says__c}"/>
+            <lightning:input type="Number" label="External ID" value="{!v.createAnimal.ExternalID__c}"/>
+        </div>
+        
+        <center>
+            <lightning:button variant="Brand" 
+                              label="Save" 
+                              title="Save" 
+                              onclick="{!c.save}"/>
+        </center>
+    </div>
+    
+</aura:component>

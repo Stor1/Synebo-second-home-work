@@ -1,0 +1,10 @@
+public class CreateAnimalController {
+	
+    @AuraEnabled
+ 	public static Animal__c saveAnimal(Animal__c animal) {
+        insert animal;
+        System.debug('CreateAnimalController : saveAnimal : animal : ' + animal);
+        return animal;
+    }
+    
+}
