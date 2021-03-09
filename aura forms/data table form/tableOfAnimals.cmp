@@ -1,0 +1,40 @@
+<aura:component controller="TableAnimalController" implements="flexipage:availableForAllPageTypes" access="global">
+    
+    <aura:attribute name="data" type="Object"/>
+    <aura:attribute name="columns" type="List"/>
+    <aura:attribute name="enableInfiniteLoading" type="Boolean" default="true"/>
+    <aura:attribute name="initialRows" type="Integer" default="10"/>
+    <aura:attribute name="rowsToLoad" type="Integer" default="5"/>
+    <aura:attribute name="totalNumberOfRows" type="Integer" default="150"/>
+    <aura:attribute name="loadMoreStatus" type="String" default=""/>
+    <aura:handler name="init" value="{! this }" action="{! c.init }"/>
+    
+    <div class="slds-box small slds-theme_default">
+        <div class="slds-theme_default">
+            <center>
+                <h1 class="inlineTitle slds-p-top--large slds-p-horizontal--medium slds-p-bottom--medium slds-text-heading--medium" 
+                        style="font-size:20px">
+                        Table of Animals
+                        <hr size="3" noshade=""></hr>
+                </h1>
+                <div class="slds-p-bottom_small">
+                    <lightning:button variant="Brand" 
+                              label="New Animal" 
+                              title="New Animal" 
+                              onclick="{!c.createAnimal}"/>
+                </div>
+            </center>
+        </div>
+        
+        <div style="height: 250px">
+            <lightning:datatable 
+                data="{! v.data }"
+                columns="{! v.columns }"
+                keyField="Id"
+                enableInfiniteLoading="true"
+                onloadmore="{! c.loadMoreData }"
+                hideCheckboxColumn="true"/>
+        </div>
+        {! v.loadMoreStatus }
+    </div>
+</aura:component>	

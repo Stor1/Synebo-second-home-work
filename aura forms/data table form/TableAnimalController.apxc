@@ -1,0 +1,19 @@
+public class TableAnimalController {
+
+    @AuraEnabled
+    public static ListAnimal__c getAnimals(Integer limitSize, String lastRecordId) {
+       
+        String query = 'SELECT Id, Name, Eats__c, Says__c, ExternalID__c FROM Animal__c';
+        
+        if(String.isNotBlank(lastRecordId)) {
+            query += ' WHERE Id  lastRecordId';
+        }
+        
+        if(limitSize != null && Integer.valueOf(limitSize) > 0) {
+            limitSize = Integer.valueOf(limitSize);
+            query += ' Limit '+limitSize;
+        }
+        return Database.query(query);
+    }
+    
+}
