@@ -1,6 +1,9 @@
 <aura:component controller ="CreateAnimalController" implements="flexipage:availableForAllPageTypes" access="global">
     
-    <aura:attribute name="createAnimal" type="Animal__c"  default="{'sObjectType' : 'Animal__c','Name' : 'new Animal', 'Eats__c' : 'grass'}"/>
+    <aura:attribute name="name" type="String" default="some new Animal"/>
+    <aura:attribute name="eats" type="String" default="grass"/>
+    <aura:attribute name="says" type="String"/>
+    <aura:attribute name="extId" type="Integer"/>
     
     <div class="slds-box small slds-theme_default">
         <center>
@@ -15,10 +18,10 @@
             New Animal Information
         </h2>
         <div class="slds-p-around_small">
-            <lightning:input type="Text" label="Name" required="true" value="{!v.createAnimal.Name}"/>
-            <lightning:input type="Text" label="Eats" value="{!v.createAnimal.Eats__c}"/>
-            <lightning:input type="Text" label="Says" value="{!v.createAnimal.Says__c}"/>
-            <lightning:input type="Number" label="External ID" value="{!v.createAnimal.ExternalID__c}"/>
+            <lightning:input type="Text" label="Name" required="true" value="{!v.name}"/>
+            <lightning:input type="Text" label="Eats" value="{!v.eats}"/>
+            <lightning:input type="Text" label="Says" value="{!v.says}"/>
+            <lightning:input type="Number" label="External ID" value="{!v.extId}"/>
         </div>
         
         <center>

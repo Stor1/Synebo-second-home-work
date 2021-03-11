@@ -1,7 +1,12 @@
 public class CreateAnimalController {
 	
     @AuraEnabled
- 	public static Animal__c saveAnimal(Animal__c animal) {
+ 	public static Animal__c saveAnimal(String name, String eats, String says, Integer extId) {
+        
+        Animal__c animal = new Animal__c(Name = name,
+                                        Eats__c = eats,
+                                        Says__c = says,
+                                        ExternalID__c = extId);
         insert animal;
         System.debug('CreateAnimalController : saveAnimal : animal : ' + animal);
         return animal;
