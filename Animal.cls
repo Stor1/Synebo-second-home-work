@@ -99,12 +99,13 @@ public class Animal {
         }
 
         return animalInfoList;
-
     }
+
     @AuraEnabled
-    public static void createAnimals(List<Animal__c> arrayOfAnimals){
-        System.debug(arrayOfAnimals);
-        insert arrayOfAnimals;
+    public static void createAnimals(List<Animal__c> animals){
+        System.debug(animals);
+        insert animals;
+        EmailManager.sendEmailAboutCreatedAnimals(animals, 'Created_animals');
     }
     
     public static Boolean fillAnimalObjectFieldsFromAnimalInfo(Animal__c animalObj, AnimalInfo animalInfo) {

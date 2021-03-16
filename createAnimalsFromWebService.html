@@ -1,13 +1,23 @@
 <template>
     <lightning-card>
         <div class="slds-m-around_medium slds-grid">
-            <lightning-input class="slds-col" label="External ID min" value={minExtId}></lightning-input>
-            <lightning-input class="slds-col" label="External ID max" value={maxExtId}></lightning-input>
+            <lightning-input class="slds-col" label="External ID min" value={minExtId} onchange={handleMinExtId} disabled={isExtIdDisabled}></lightning-input>
+            <lightning-input class="slds-col" label="External ID max" value={maxExtId} onchange={handleMaxExtId} disabled={isExtIdDisabled}></lightning-input>
         </div>
 
         <div class="slds-m-around_medium slds-grid">
-            <lightning-button class="slds-col slds-p-top--small slds-p-bottom--middle" variant="Brand" label="Get Animal" onclick={getAnimalBtnClickHandler}></lightning-button>
-            <lightning-button class="slds-col slds-p-top--small slds-p-bottom--middle" variant="Brand" label="Create Animals" onclick={createAnimalsBtnClickHandler}></lightning-button>
+            <lightning-button class="slds-col slds-p-top--small slds-p-bottom--middle" 
+                            variant="Brand" 
+                            label="Get Animal"
+                            disabled={isBtnGetAnimalDisabled}
+                            onclick={getAnimalBtnClickHandler}>
+            </lightning-button>
+            <lightning-button class="slds-col slds-p-top--small slds-p-bottom--middle" 
+                            variant="Brand"
+                            label="Create Animals"
+                            disabled={isBtnCreateAnimalsDisabled}
+                            onclick={createAnimalsBtnClickHandler}>
+            </lightning-button>
         </div>
 
         <div style="height: 300px;">
